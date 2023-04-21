@@ -83,3 +83,18 @@ task :import, [:invoice_items] => :environment do
   ActiveRecord::Base.connection.reset_pk_sequence!('invoice_items')
   puts "InvoiceItems imported."
 end
+
+namespace :create do
+  task :bulk_discount_csv => :environment do
+    rows = FactoryBot.create_list(:csv_row, 100)
+    require 'pry'; binding.pry
+
+    CSV.open('bulk_discounts.csv', 'wb') do |csv|
+      csv << ['id', 'merchant_id', 'percentage_discount', 'quantity_threshold', 'created_at', 'updated_at']
+
+      rows.each do |row|
+        csv << row.to_csv.split(',')
+      end
+    end
+  end
+end
