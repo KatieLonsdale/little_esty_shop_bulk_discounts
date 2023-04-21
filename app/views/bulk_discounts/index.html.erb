@@ -1,0 +1,7 @@
+<% @bulk_discounts.each do |bd| %>
+  <div id="discount-<%= bd.id %>">
+    <%= number_to_percentage(bd.percentage_discount, precision: 0) %> off 
+    <%= bd.quantity_threshold %> or more
+    <%= link_to "View", merchant_bulk_discount_path(bd.merchant_id, bd.id) %><br>
+  </div>
+<% end %>
