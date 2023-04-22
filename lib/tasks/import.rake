@@ -84,16 +84,30 @@ task :import, [:invoice_items] => :environment do
   puts "InvoiceItems imported."
 end
 
+task :import, [:bulk_discounts] => :environment do
+  CSV.foreach('db/data/bulk_discounts.csv', headers: true) do |row|
+    BulkDiscount.create!({ id: row[0],
+                          merchant_id: row[1],
+                          percentage_discount: row[2],
+                          quantity_threshold: row[3],
+                          created_at: row[4],
+                          updated_at: row[5] })
+  end
+  ActiveRecord::Base.connection.reset_pk_sequence!('bulk_discounts')
+  puts "BulkDiscounts imported."
+end
+
 namespace :create do
   task :bulk_discount_csv => :environment do
-    rows = FactoryBot.create_list(:csv_row, 100)
-    require 'pry'; binding.pry
+    rows = FactoryBot.create_list(:bulk_discount, 100)
 
-    CSV.open('bulk_discounts.csv', 'wb') do |csv|
+    CSV.open('db/data/bulk_discounts.csv', 'w') do |csv|
       csv << ['id', 'merchant_id', 'percentage_discount', 'quantity_threshold', 'created_at', 'updated_at']
 
       rows.each do |row|
-        csv << row.to_csv.split(',')
+        merchant_id = Random.new
+        array = [row.id, merchant_id.rand(100), row.percentage_discount, row.quantity_threshold, row.created_at, row.updated_at]
+        csv << array.to_csv.split(',')
       end
     end
   end
