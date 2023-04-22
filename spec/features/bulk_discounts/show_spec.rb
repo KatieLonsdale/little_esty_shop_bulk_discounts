@@ -28,12 +28,3 @@ RSpec.describe "Bulk discounts show page" do
     expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant.id, @bd_1.id))
   end
 end
-
-
-# Then I see a link to edit the bulk discount
-# When I click this link
-# Then I am taken to a new page with a form to edit the discount
-# And I see that the discounts current attributes are pre-poluated in the form
-# When I change any/all of the information and click submit
-# Then I am redirected to the bulk discount's show page
-# And I see that the discount's attributes have been updated
