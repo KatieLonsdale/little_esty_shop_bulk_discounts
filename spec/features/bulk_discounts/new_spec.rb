@@ -19,6 +19,7 @@ RSpec.describe 'Bulk discounts new page' do
       within("#all-discounts") do
         expect(page).to have_content("55% off 101 or more")
       end
+      expect(page).to have_content("New Discount Created")
     end
 
     it "returns an error if a field is blank" do
