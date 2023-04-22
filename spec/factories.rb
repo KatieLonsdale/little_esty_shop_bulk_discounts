@@ -57,15 +57,4 @@ FactoryBot.define do
     updated_at { Time.zone.now }
     association :merchant
   end
-
-  factory :csv_row do
-    sequence(:id)
-    merchant_id { Faker::Number.between(from:1, to: 100)}
-    percentage_discount {Faker::Number.between(from: 5, to: 50)}
-    quantity_threshold {Faker::Number.between(from: 10, to: 100)}
-    created_at { Time.zone.now }
-    updated_at { Time.zone.now }
-    
-    to_csv { CSV.generate_line [id, merchant_id, percentage_discount, quantity_threshold, created_at, updated_at] }
-  end
 end
