@@ -69,4 +69,22 @@ describe 'Admin Invoices Index Page' do
       expect(@i1.status).to eq('completed')
     end
   end
+
+  describe "bulk discounts" do
+    before(:each) do
+      @merchant = create(:merchant)
+      @bd = create(:bulk_discount, merchant_id: @merchant.id, quantity_threshold: 10, percentage_discount: 50)
+      @invoice = create(:invoice)
+      @item_1 = create(:item, merchant_id: @merchant.id)
+      @item_2 = create(:item, merchant_id: @merchant.id)
+      @ii_1 = create(:invoice_item, item_id: @item_1.id, invoice_id: @invoice.id, quantity: 12, unit_price: 1000)
+      @ii_2 = create(:invoice_item, item_id: @item_2.id, invoice_id: @invoice.id, quantity: 8, unit_price: 1000)
+    end
+    it "has the total revenue for the invoice including the discounts" do
+      visit admin_invoice_path(@invoice)
+      within("#discounted-revenue") do
+        expect(page).to have_content(@invoice.all_discounted_revenue)
+      end 
+    end
+  end
 end
