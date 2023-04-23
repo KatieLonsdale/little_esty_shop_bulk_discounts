@@ -105,17 +105,28 @@ RSpec.describe 'invoices show' do
   describe "bulk discounts" do
     before(:each) do
       @merchant = create(:merchant)
-      @bulk_discount = create(:bulk_discount, merchant_id: @merchant.id, quantity_threshold: 10, percentage_discount: 50)
+      @bd = create(:bulk_discount, merchant_id: @merchant.id, quantity_threshold: 10, percentage_discount: 50)
       @invoice = create(:invoice)
-      @item = create(:item, merchant_id: @merchant.id)
-      @invoice_item = create(:invoice_item, item_id: @item.id, invoice_id: @invoice.id, quantity: 12, unit_price: 1000)
+      @item_1 = create(:item, merchant_id: @merchant.id)
+      @item_2 = create(:item, merchant_id: @merchant.id)
+      @ii_1 = create(:invoice_item, item_id: @item_1.id, invoice_id: @invoice.id, quantity: 12, unit_price: 1000)
+      @ii_2 = create(:invoice_item, item_id: @item_2.id, invoice_id: @invoice.id, quantity: 8, unit_price: 1000)
     end
     it "has the total revenue for my merchant including the discounts" do
       visit merchant_invoice_path(@merchant, @invoice)
-      save_and_open_page
       within("#discounted-revenue") do
         expect(page).to have_content(@invoice.total_discounted_revenue(@merchant))
       end 
+    end
+    it "next to each invoice item there is a link to the bulk discount that was applied, if any" do
+      visit merchant_invoice_path(@merchant, @invoice)
+      save_and_open_page
+      within("#the-status-#{@ii_1.id}") do
+        expect(page).to have_content("#{@bd.percentage_discount}% off #{@bd.quantity_threshold} or more")
+      end
+      within("#the-status-#{@ii_2.id}") do
+        expect(page).to have_no_content("#{@bd.percentage_discount}% off #{@bd.quantity_threshold} or more")
+      end
     end
   end
 end
