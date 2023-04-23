@@ -120,10 +120,14 @@ RSpec.describe 'invoices show' do
     end
     it "next to each invoice item there is a link to the bulk discount that was applied, if any" do
       visit merchant_invoice_path(@merchant, @invoice)
-      save_and_open_page
       within("#the-status-#{@ii_1.id}") do
         expect(page).to have_content("#{@bd.percentage_discount}% off #{@bd.quantity_threshold} or more")
+        click_link("#{@bd.percentage_discount}% off #{@bd.quantity_threshold} or more")
       end
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @bd))
+    end
+    it "does not show anything if no discount was applied" do
+      visit merchant_invoice_path(@merchant, @invoice)
       within("#the-status-#{@ii_2.id}") do
         expect(page).to have_no_content("#{@bd.percentage_discount}% off #{@bd.quantity_threshold} or more")
       end
