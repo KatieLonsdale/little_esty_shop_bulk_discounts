@@ -29,8 +29,6 @@ RSpec.describe Invoice, type: :model do
       before(:each) do
         @merchant1 = Merchant.create!(name: 'Hair Care')
         @merchant2 = Merchant.create!(name: 'another merchant')
-        @bulk_discount1 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 5, merchant_id: @merchant1.id)
-        @bulk_discount2 = BulkDiscount.create!(percentage_discount: 25, quantity_threshold: 10, merchant_id: @merchant2.id)
         @item_1 = Item.create!(name: "Shampoo", description: "This washes your hair", unit_price: 10, merchant_id: @merchant1.id, status: 1)
         @item_2 = Item.create!(name: "Butterfly Clip", description: "This holds up your hair but in a clip", unit_price: 5, merchant_id: @merchant1.id)
         @item_3 = Item.create!(name: "hoodie", description: "warm", unit_price: 20, merchant_id: @merchant2.id)
@@ -41,16 +39,19 @@ RSpec.describe Invoice, type: :model do
         @ii_3 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_3.id, quantity: 10, unit_price: 20, status: 1)
       end
       it "returns total revenue from invoice after discounts for given merchant" do
-        expect(@invoice_1).total_discounted_revenue(@merchant1).to eq(55)
-        expect(@invoice_1).total_discounted_revenue(@merchant2).to eq(150)
+        @bulk_discount1 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 5, merchant_id: @merchant1.id)
+        @bulk_discount2 = BulkDiscount.create!(percentage_discount: 25, quantity_threshold: 10, merchant_id: @merchant2.id)
+        expect(@invoice_1.total_discounted_revenue(@merchant1)).to eq(55)
+        expect(@invoice_1.total_discounted_revenue(@merchant2)).to eq(150)
       end
       it "considers each item's quantity when applying a discount, not combined item quantities" do
         @bulk_discount1 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 10, merchant_id: @merchant1.id)
-        expect(@invoice_1).total_discounted_revenue(@merchant1).to eq(100)
+        expect(@invoice_1.total_discounted_revenue(@merchant1)).to eq(100)
       end
       it "applies the biggest discount if item quantity exceeds threshold for multiple discounts" do
-        @bulk_discount3 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 5, merchant_id: @merchant2.id)
-        expect(@invoice_1).total_discounted_revenue(@merchant2).to eq(100)
+        @bulk_discount1 = BulkDiscount.create!(percentage_discount: 25, quantity_threshold: 10, merchant_id: @merchant2.id)
+        @bulk_discount2 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 5, merchant_id: @merchant2.id)
+        expect(@invoice_1.total_discounted_revenue(@merchant2)).to eq(100)
       end
     end
   end
