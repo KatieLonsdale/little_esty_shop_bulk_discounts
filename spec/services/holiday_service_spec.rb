@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe HolidayService do
   describe "class methods" do
     describe "holidays" do
