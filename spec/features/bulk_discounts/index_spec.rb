@@ -3,9 +3,11 @@ require 'rails_helper'
 RSpec.describe "merchant bulk discounts index page" do
   before(:each) do
     @merchant = create(:merchant)
+    @merchant2 = create(:merchant)
     @bulk_discounts = create_list(:bulk_discount, 5, merchant_id: @merchant.id)
     @bd_1 = @bulk_discounts.first
     @bd_2 = @bulk_discounts[1]
+    @bd_3 = create(:bulk_discount, merchant_id: @merchant2.id, percentage_discount: 60, quantity_threshold: 5)
   end
   
   describe "As a merchant, when I visit my bulk discounts index page" do
@@ -15,6 +17,10 @@ RSpec.describe "merchant bulk discounts index page" do
         within("#discount-#{bd.id}") do
           expect(page).to have_content("#{bd.percentage_discount}% off #{bd.quantity_threshold} or more")
         end
+      end
+
+      within("#all-discounts") do
+        expect(page).to have_no_content("#{@bd_3.percentage_discount}% off #{@bd_3.quantity_threshold} or more")
       end
     end
     
