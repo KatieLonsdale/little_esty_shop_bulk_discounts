@@ -14,8 +14,8 @@
     <div id="discount-<%= bd.id %>">
       <%= number_to_percentage(bd.percentage_discount, precision: 0) %> off 
       <%= bd.quantity_threshold %> or more
-      <%= link_to "View", merchant_bulk_discount_path(bd.merchant_id, bd.id) %> || 
-      <%= link_to "Delete", merchant_bulk_discount_path(bd.merchant_id, bd.id), method: :delete %><br>
+      <%= button_to "View", merchant_bulk_discount_path(bd.merchant_id, bd.id), method: :get %> 
+      <%= button_to "Delete", merchant_bulk_discount_path(bd.merchant_id, bd.id), method: :delete %><br>
     </div>
   <% end %>
 </div>
