@@ -21,7 +21,8 @@ RSpec.describe "merchant bulk discounts index page" do
     it "links each bulk discount to its show page" do
       visit merchant_bulk_discounts_path(@merchant.id)
       within("#discount-#{@bd_1.id}") do
-        click_link("View")
+        expect(page).to have_button("View")
+        click_button("View")
       end
       expect(current_path).to eq(merchant_bulk_discount_path(@merchant.id, @bd_1.id))
     end
@@ -37,8 +38,8 @@ RSpec.describe "merchant bulk discounts index page" do
     it "has a link to delete each discount" do
       visit merchant_bulk_discounts_path(@merchant.id)
       within("#discount-#{@bd_1.id}") do
-        expect(page).to have_link("Delete")
-        click_link("Delete")
+        expect(page).to have_button("Delete")
+        click_button("Delete")
       end
 
       expect(current_path).to eq(merchant_bulk_discounts_path(@merchant.id))
