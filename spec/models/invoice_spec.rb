@@ -114,6 +114,11 @@ RSpec.describe Invoice, type: :model do
         @bulk_discount2 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 5, merchant_id: @merchant2.id)
         expect(@invoice_1.total_discounted_revenue(@merchant2)).to eq(100)
       end
+      it "returns total if there are no discounts" do
+        expect(@invoice_1.total_discounted_revenue(@merchant1)).to eq(300)
+        expect(@invoice_1.total_discounted_revenue(@merchant2)).to eq(300)
+        # using wrong expects based on what last person's total_revenue method would return
+      end
     end
 
     describe "eligible_items" do
