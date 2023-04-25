@@ -51,5 +51,16 @@ RSpec.describe "Bulk discount edit page" do
       expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant.id, @bd_1.id))
       expect(page).to have_content("Percentage discount is not a number")
     end
+    it "returns an error if percentage is over 100" do
+      visit edit_merchant_bulk_discount_path(@merchant.id, @bd_1.id)
+      within("#edit-bulk-discount") do
+        fill_in "Percentage Discount", with: 101
+        fill_in "Quantity Threshold", with: 50
+        click_button "Submit"
+      end
+ 
+      expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant.id, @bd_1.id))
+      expect(page).to have_content("Percentage discount must be less than or equal to 100")
+    end
   end
 end
