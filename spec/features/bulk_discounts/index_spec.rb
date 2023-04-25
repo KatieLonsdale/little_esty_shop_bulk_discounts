@@ -49,5 +49,18 @@ RSpec.describe "merchant bulk discounts index page" do
       end
       expect(page).to have_content("Deleted Successfully")
     end
+
+    it "has an upcoming holidays section with the next 3 upcoming holidays' name and date" do
+      visit merchant_bulk_discounts_path(@merchant.id)
+
+      within("#holidays") do
+        expect(page).to have_content("Upcoming Holidays")
+        holidays = BulkDiscountFacade.new.next_3_holidays
+        holidays.each do |holiday|
+          expect(page).to have_content(holiday.name)
+          expect(page).to have_content(holiday.date)
+        end
+      end
+    end
   end
 end

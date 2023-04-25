@@ -2,6 +2,13 @@
   <%= link_to "Create New Discount", new_merchant_bulk_discount_path(@merchant.id) %>
 </div>
 
+<ul id="holidays">
+  Upcoming Holidays:
+  <% @facade.each do |holiday| %>
+      <li><%= holiday.name %> on <%= holiday.date %></li>
+  <% end %>
+</ul>
+
 <div id="all-discounts">
   <% @bulk_discounts.each do |bd| %>
     <div id="discount-<%= bd.id %>">
