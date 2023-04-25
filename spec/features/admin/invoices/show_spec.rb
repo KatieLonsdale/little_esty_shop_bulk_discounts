@@ -82,8 +82,9 @@ describe 'Admin Invoices Index Page' do
     end
     it "has the total revenue for the invoice including the discounts" do
       visit admin_invoice_path(@invoice)
+      expected = (@invoice.total_revenue - @invoice.discounted_revenue).to_f/100
       within("#discounted-revenue") do
-        expect(page).to have_content("$#{@invoice.all_discounted_revenue.to_f / 100}")
+        expect(page).to have_content("$#{expected}")
       end 
     end
   end
