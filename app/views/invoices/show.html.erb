@@ -20,10 +20,10 @@
   <br>
 
   <p> Created on: <%= @invoice.created_at.strftime("%A, %B %-d, %Y") %></p>
-  <p>Total Revenue: <%= @invoice.total_revenue %></p>
+  <p>Total Revenue: <%= number_to_currency(@invoice.total_revenue.to_f/100) %></p>
 
   <div id="discounted-revenue">
-  <p>Total Discounted Revenue: <%= @invoice.total_discounted_revenue(@merchant) %>
+  <p>Total Discounted Revenue: <%= number_to_currency((@invoice.total_revenue - @invoice.merchant_discounted_revenue(@merchant)).to_f/100) %>
   </div>
 
 
@@ -49,7 +49,7 @@
           <tr class="tr">
             <td style="text-align:center"><%= i.item.name %></td>
             <td style="text-align:center"><%= i.quantity %></td>
-            <td style="text-align:center">$<%= i.unit_price %></td>
+            <td style="text-align:center"><%= number_to_currency(i.unit_price.to_f/100) %></td>
             <td style="text-align:center"><%= link_to "#{i.discount_applied. percentage_discount}% off #{i.discount_applied.quantity_threshold} or more", merchant_bulk_discount_path(@merchant, i.discount_applied) if i.discount_applied %></td>
             <td style="text-align:center"><%= form_with model: @invoice, url: merchant_invoice_path(@merchant, @invoice), method: :patch, local: true do |f| %>
                                             <%= f.select :status, Invoice.statuses.keys, selected: "#{@invoice.status}" %>
