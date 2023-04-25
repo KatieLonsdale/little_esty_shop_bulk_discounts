@@ -23,7 +23,7 @@
   <p>Total Revenue: <%= number_to_currency(@invoice.total_revenue.to_f/100) %></p>
 
   <div id="discounted-revenue">
-  <p>Total Discounted Revenue: <%= number_to_currency(@invoice.total_discounted_revenue(@merchant).to_f/100) %>
+  <p>Total Discounted Revenue: <%= number_to_currency((@invoice.total_revenue - @invoice.merchant_discounted_revenue(@merchant)).to_f/100) %>
   </div>
 
 
