@@ -114,7 +114,7 @@ RSpec.describe 'invoices show' do
     end
     it "has the total revenue for my merchant including the discounts" do
       visit merchant_invoice_path(@merchant, @invoice)
-      disc_rev = "$#{@invoice.total_discounted_revenue(@merchant).to_f / 100}"
+      disc_rev = "$#{(@invoice.total_revenue - @invoice.merchant_discounted_revenue(@merchant)).to_f/100}"
       within("#discounted-revenue") do
         expect(page).to have_content(disc_rev)
       end 
